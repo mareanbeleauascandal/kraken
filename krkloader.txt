@@ -1,0 +1,114 @@
+local krakenGUI = Instance.new("ScreenGui")
+krakenGUI.Name = "KRAKEN"
+krakenGUI.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0.25, 0, 0.25, 0)
+mainFrame.Position = UDim2.new(0.375, 0, 0.375, 0)
+mainFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+mainFrame.BorderSizePixel = 0
+mainFrame.BackgroundTransparency = 0.1
+mainFrame.Active = true
+mainFrame.Draggable = false
+mainFrame.Parent = krakenGUI
+
+local mainFrameCorner = Instance.new("UICorner")
+mainFrameCorner.CornerRadius = UDim.new(0.1, 0)
+mainFrameCorner.Parent = mainFrame
+
+local mainFrameStroke = Instance.new("UIStroke")
+mainFrameStroke.Color = Color3.fromRGB(200, 200, 200)
+mainFrameStroke.Thickness = 2
+mainFrameStroke.Parent = mainFrame
+
+local shadow = Instance.new("ImageLabel")
+shadow.Size = UDim2.new(1, 20, 1, 20)
+shadow.Position = UDim2.new(0, -10, 0, -10)
+shadow.Image = "rbxassetid://1316045217"
+shadow.ImageColor3 = Color3.new(0, 0, 0)
+shadow.ImageTransparency = 0.7
+shadow.ScaleType = Enum.ScaleType.Slice
+shadow.SliceCenter = Rect.new(10, 10, 118, 118)
+shadow.Parent = mainFrame
+shadow.ZIndex = 0
+
+local titleBar = Instance.new("TextButton")
+titleBar.Text = "KRAKEN"
+titleBar.Font = Enum.Font.GothamBold
+titleBar.TextSize = 24
+titleBar.Size = UDim2.new(1, 0, 0.1, 0)
+titleBar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+titleBar.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleBar.BorderSizePixel = 0
+titleBar.Parent = mainFrame
+
+local titleBarCorner = Instance.new("UICorner")
+titleBarCorner.CornerRadius = UDim.new(0.1, 0)
+titleBarCorner.Parent = titleBar
+
+local titleBarStroke = Instance.new("UIStroke")
+titleBarStroke.Color = Color3.fromRGB(100, 100, 100)
+titleBarStroke.Thickness = 2
+titleBarStroke.Parent = titleBar
+
+local titleBarGradient = Instance.new("UIGradient")
+titleBarGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(40, 40, 40)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 20, 20))
+})
+titleBarGradient.Parent = titleBar
+
+local theRealShitButton = Instance.new("TextButton")
+theRealShitButton.Text = "Load"
+theRealShitButton.Font = Enum.Font.Gotham
+theRealShitButton.TextSize = 18
+theRealShitButton.Size = UDim2.new(0.8, 0, 0.2, 0)
+theRealShitButton.Position = UDim2.new(0.1, 0, 0.4, 0)
+theRealShitButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+theRealShitButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+theRealShitButton.Parent = mainFrame
+
+local theRealShitButtonCorner = Instance.new("UICorner")
+theRealShitButtonCorner.CornerRadius = UDim.new(0.1, 0)
+theRealShitButtonCorner.Parent = theRealShitButton
+
+local theRealShitButtonStroke = Instance.new("UIStroke")
+theRealShitButtonStroke.Color = Color3.fromRGB(100, 100, 100)
+theRealShitButtonStroke.Thickness = 2
+theRealShitButtonStroke.Parent = theRealShitButton
+
+theRealShitButton.MouseButton1Click:Connect(function()
+    print("kraken loaded")
+loadstring(game:HttpGet("https://raw.githubusercontent.com/mareanbeleauascandal/kraken/main/kraken.txt"))()
+    krakenGUI:Destroy()
+end)
+
+local dragging
+local dragInput
+local dragStart
+local startPos
+
+local function update(input)
+    local delta = input.Position - dragStart
+    mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+titleBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = mainFrame.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+titleBar.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        dragInput = input
+    end
+end)
